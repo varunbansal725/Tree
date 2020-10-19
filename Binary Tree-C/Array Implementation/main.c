@@ -47,9 +47,29 @@ void PreOrder(struct Node *p) {
     }
 }
 
+void InOrder(struct Node *p) {
+    if(p) {
+        InOrder(p->lchild);
+        printf("%d ", p->data);
+        InOrder(p->rchild);
+    }
+}
+
+void PostOrder(struct Node *p) {
+    if(p) {
+        PostOrder(p->lchild);
+        PostOrder(p->rchild);
+        printf("%d ", p->data);
+    }
+}
+
 
 void main()
 {
     tree_create();
     PreOrder(root);
+    printf("\n");
+    Inrder(root);
+    printf("\n");
+    PostOrder(root);
 }
