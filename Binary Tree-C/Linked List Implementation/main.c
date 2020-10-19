@@ -63,13 +63,35 @@ void PostOrder(struct Node *p) {
     }
 }
 
+void LevelOrder(struct Node *p) {
+    struct Queue q;
+    create(&q, 50);
+    printf("%d ", p->data);
+    enqueue(&q, p);
+    while(!isEmpty(q)) {
+        p=dequeue(&q);
+        if(p->lchild!=NULL) {
+            printf("%d ", p->lchild->data);
+            enqueue(&q, p->lchild);
+        }
+        if(p->rchild!=NULL) {
+            printf("%d ", p->rchild->data);
+            enqueue(&q, p->rchild);
+        }
+    }
+}
+
 
 void main()
 {
     tree_create();
+    printf("PreOrder traversal: ");
     PreOrder(root);
-    printf("\n");
-    Inrder(root);
-    printf("\n");
+    printf("\nPreOrder traversal: ");
+    InOrder(root);
+    printf("\nPostOrder traversal: ");
     PostOrder(root);
+    printf("\nLevelOrder traversal: ");
+    LevelOrder(root);
+
 }
