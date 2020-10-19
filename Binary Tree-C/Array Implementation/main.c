@@ -1,75 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
 
-struct Node *root=NULL;
 
-void tree_create() {
-    struct Node *p, *t;
-    struct Queue queue;
-    create(&queue, 100);
-    int x, y, z;
-    printf("Enter value of root node: ");
+int * create() {
+    int x,z, y, size, i;
+    int left_child=2i;
+    int right_child=2i+1;
+    printf("Enter the no. of nodes of the tree: ");
+    scanf("%d", &size);
+    int tree[size];
+    printf("Enter the root value: ");
     scanf("%d", &x);
-    root=(struct Node *)malloc(sizeof(struct Node));
-    root->data=x;
-    root->lchild=root->rchild=NULL;
-    enqueue(&queue, root);
-    while(!isEmpty(queue)) {
-        p=dequeue(&queue);
-        printf("Enter value for left child of %d: ", p->data);
-        scanf("%d", &y);
-        if(y!=-1) {
-        t=(struct Node *)malloc(sizeof(struct Node));
-        t->data=y;
-        t->lchild=t->rchild=NULL;
-        p->lchild=t;
-        enqueue(&queue, t);
+    tree[0]=NULL;
+    tree[1]=x;
 
-        }
-        printf("Enter value for right child of %d: ", p->data);
+    for(i=1; i<=size; i++) {
+        printf("Enter left child of %d: ", tree[i]);
         scanf("%d", &z);
-        if(z!=-1) {
-        t=(struct Node *)malloc(sizeof(struct Node));
-        t->data=z;
-        t->lchild=t->rchild=NULL;
-        p->rchild=t;
-        enqueue(&queue, t);
-        }
+        if(z!=-1)
+            tree[2*i]=z;
+        printf("Enter right child of %d: ", tree[i]);
+        scanf("%d", &y);
+        if(y!=-1)
+            tree[2*i+1]=y;
     }
-}
-
-void PreOrder(struct Node *p) {
-    if(p) {
-        printf("%d ", p->data);
-        PreOrder(p->lchild);
-        PreOrder(p->rchild);
-    }
-}
-
-void InOrder(struct Node *p) {
-    if(p) {
-        InOrder(p->lchild);
-        printf("%d ", p->data);
-        InOrder(p->rchild);
-    }
-}
-
-void PostOrder(struct Node *p) {
-    if(p) {
-        PostOrder(p->lchild);
-        PostOrder(p->rchild);
-        printf("%d ", p->data);
-    }
+    return tree;
 }
 
 
 void main()
 {
-    tree_create();
-    PreOrder(root);
-    printf("\n");
-    Inrder(root);
-    printf("\n");
-    PostOrder(root);
+    int *p;
+    p=create();
 }
