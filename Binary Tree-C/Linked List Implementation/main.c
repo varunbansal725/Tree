@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
+#include "stack.h"
 
 struct Node *root=NULL;
 
@@ -81,17 +82,52 @@ void LevelOrder(struct Node *p) {
     }
 }
 
+void IPreOrder(struct Node *p) {
+    struct Stack stack;
+    stack_create(&stack);
+    while(p!=NULL || !stack_empty(stack)) {
+        if(p) {
+            printf("%d ", p->data);
+            push(&stack, p);
+            p=p->lchild;
+        }
+        else {
+            p=pop(&stack);
+            p=p->rchild;
+        }
+    }
+}
+
+void IInOrder(struct Node *p) {
+    struct Stack stack;
+    stack_create(&stack);
+    while(p!=NULL || !stack_empty(stack)) {
+        if(p) {
+            push(&stack, p);
+
+            p=p->lchild;
+        }
+        else {
+            p=pop(&stack);
+            printf("%d ", p->data);
+            p=p->rchild;
+        }
+    }
+}
+
 
 void main()
 {
     tree_create();
-    printf("PreOrder traversal: ");
+    printf("\nPreOrder Traversal: ");
     PreOrder(root);
-    printf("\nPreOrder traversal: ");
+    printf("\nInOrder Traversal: ");
     InOrder(root);
-    printf("\nPostOrder traversal: ");
+    printf("\nPostOrder Traversal: ");
     PostOrder(root);
-    printf("\nLevelOrder traversal: ");
-    LevelOrder(root);
-
+    printf("\nIterative PreOrder traversal: ");
+    IPreOrder(root);
+    printf("\nIterative InOrder traversal: ");
+    IInOrder(root);
+    
 }
