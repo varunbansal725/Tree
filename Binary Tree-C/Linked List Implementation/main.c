@@ -148,6 +148,47 @@ int sum_of_nodes(struct Node *p) {
     return 0;
 }
 
+int leaf_nodes(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=leaf_nodes(p->lchild);
+        y=leaf_nodes(p->rchild);
+        if(p->lchild==NULL && p->rchild==NULL)
+            return x+y+1;
+        else
+            return x+y;
+    }
+    return 0;
+}
+
+
+int nodes_deg_two(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=nodes_deg_two(p->lchild);
+        y=nodes_deg_two(p->rchild);
+        if(p->lchild && p->rchild)
+            return x+y+1;
+        else
+            return x+y;
+    }
+    return 0;
+}
+
+int nodes_deg_one(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=nodes_deg_one(p->lchild);
+        y=nodes_deg_one(p->rchild);
+        if((p->lchild==NULL && p->rchild) || (p->lchild && p->rchild==NULL))
+            return x+y+1;
+        else
+            return x+y;
+    }
+    return 0;
+}
+
+
 void main()
 {
     tree_create();
@@ -164,5 +205,8 @@ void main()
     printf("\nHeight of tree are: %d", height(root));
     printf("\nSum of nodes in the tree are: %d", sum_of_nodes(root));
     printf("\nNumber of nodes in the tree are: %d", nodes(root));
+    printf("\nNumber of leaf nodes in the tree are: %d", leaf_nodes(root));
+    printf("\nNumber of 2 degree nodes in the tree are: %d", nodes_deg_two(root));
+    printf("\nNumber of 1 degree nodes in the tree are: %d", nodes_deg_one(root));
 
 }
