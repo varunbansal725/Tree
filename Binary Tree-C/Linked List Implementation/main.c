@@ -115,6 +115,38 @@ void IInOrder(struct Node *p) {
     }
 }
 
+int height(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=height(p->lchild);
+        y=height(p->rchild);
+        if(x > y)
+            return x+1;
+        else
+            return y+1;
+    }
+    return 0;
+}
+
+int nodes(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=nodes(p->lchild);
+        y=nodes(p->rchild);
+        return x+y+1;
+    }
+    return 0;
+}
+
+int sum_of_nodes(struct Node *p) {
+    int x,y;
+    if(p!=NULL) {
+        x=sum_of_nodes(p->lchild);
+        y=sum_of_nodes(p->rchild);
+        return x+y+p->data;
+    }
+    return 0;
+}
 
 void main()
 {
@@ -129,5 +161,8 @@ void main()
     IPreOrder(root);
     printf("\nIterative InOrder traversal: ");
     IInOrder(root);
-    
+    printf("\nHeight of tree are: %d", height(root));
+    printf("\nSum of nodes in the tree are: %d", sum_of_nodes(root));
+    printf("\nNumber of nodes in the tree are: %d", nodes(root));
+
 }
