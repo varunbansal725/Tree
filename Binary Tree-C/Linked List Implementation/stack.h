@@ -12,7 +12,7 @@ void stack_create(struct Stack *st) {
 
     st->size=50;
     st->top=-1;
-    st->S=(struct Stack **)malloc(st->size*sizeof(struct Stack *));
+    st->S=(struct Node **)malloc(st->size*sizeof(struct Stack *));
 };
 
 void push(struct Stack *stack, struct Node * element) {
