@@ -40,7 +40,7 @@ struct Node * RInsert(struct Node *t, int element) {
         newnode=(struct Node *)malloc(sizeof(struct Node));
         newnode->data=element;
         newnode->lchild=newnode->rchild=NULL;
-        return;
+        return newnode;
     }
 
         if(element < t->data)
