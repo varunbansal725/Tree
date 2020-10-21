@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "stack.h"
 
 struct Node {
     int data;
@@ -133,6 +134,44 @@ struct Node * delete(struct Node *p, int key) {
         }
     }
 }
+
+void create_from_preorder(int arr[]) {
+    int x, i, size;
+    i=0;
+    x=32767;
+    size=sizeof(arr)/sizeof(arr[0]);
+    struct Stack stack;
+    stack.size=20;
+    stack.top=-1;
+    stack.s=(struct Stack **)malloc((stack.size)*sizeof(struct Stack *));
+    struct Node *p, *newnode;
+    root=(struct Node *)malloc(sizeof(struct Node));
+    root->data=arr[i++];
+    root->lchild=root->rchild=NULL;
+    p=root;
+    while(i < size) {
+        if(arr[i] < p->data) {
+            newnode=(struct Node *)malloc(sizeof(struct Node));
+            newnode->data=arr[i++];
+            newnode->lchild=newnode->rchild=NULL;
+            p->lchild=newnode;
+            push(&stack, p);
+            p=newnode;
+        }
+        else {
+            if(arr[i] > p->data && arr[i] < isEmpty(stack) ? x:stack_top(&stack)->data) {
+                newnode=(struct Node *)malloc(sizeof(struct Node));
+                newnode->data=arr[i++];
+                newnode->lchild=newnode->rchild=NULL;
+                p->rchild=newnode;
+                p=newnode;
+            }
+            else
+                p=pop(&stack);
+        }
+    }
+}
+
 
 
 void main()
