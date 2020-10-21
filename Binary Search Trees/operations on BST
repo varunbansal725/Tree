@@ -34,6 +34,22 @@ void Insert(int element) {
         p->rchild=newnode;
 }
 
+struct Node * RInsert(struct Node *t, int element) {
+    struct Node *newnode, *p;
+    if(t==NULL) {
+        newnode=(struct Node *)malloc(sizeof(struct Node));
+        newnode->data=element;
+        newnode->lchild=newnode->rchild=NULL;
+        return;
+    }
+
+        if(element < t->data)
+            t->lchild=RInsert(t->lchild, element);
+        else
+            t->rchild=RInsert(t->rchild, element);
+  return t;
+}
+
 void InOrder(struct Node *p) {
     if(p!=NULL) {
         InOrder(p->lchild);
@@ -56,23 +72,7 @@ void PostOrder(struct Node *p) {
         PostOrder(p->rchild);
         printf("%d ", p->data);
     }
-}
 
-
-struct Node * RInsert(struct Node *t, int element) {
-    struct Node *newnode, *p;
-    if(t==NULL) {
-        newnode=(struct Node *)malloc(sizeof(struct Node));
-        newnode->data=element;
-        newnode->lchild=newnode->rchild=NULL;
-        return;
-    }
-
-        if(element < t->data)
-            t->lchild=RInsert(t->lchild, element);
-        else
-            t->rchild=RInsert(t->rchild, element);
-  return t;
 }
 
 struct Node * search(int key) {
@@ -88,17 +88,67 @@ struct Node * search(int key) {
     return NULL;
 }
 
+int height(struct Node *p) {
+    int x,y;
+    if(p==NULL)
+        return 0;
+    x=height(p->lchild);
+    y=height(p->rchild);
+    return x>y?x+1:y+1;
+}
+
+struct Node * InSucc(struct Node *p) {
+    while(p && p->lchild!=NULL)
+        p=p->lchild;
+    return p;
+}
+
+struct Node * InPre(struct Node *p) {
+    while(p && p->rchild!=NULL)
+        p=p->rchild;
+    return p;
+}
+
+struct Node * delete(struct Node *p, int key) {
+    struct Node *q;
+    if(p==NULL)
+        return NULL;
+    if(p->lchild==NULL && p->rchild==NULL) {
+        if(p==root)
+            root=NULL;
+        free(p);
+        return NULL;
+    }
+    if(key < p->data)
+        p->lchild=delete(p->lchild, key);
+    else if(key > p->data)
+        p->rchild=delete(p->rchild, key);
+    else {
+        if(height(p->lchild) > height(p->rchild)) {
+            q=InPre(p->lchild);
+            p->data=q->data;
+            p->lchild=delete(p->lchild, q->data);
+        }
+        else {
+            q=InSucc(p->rchild);
+            p->data=q->data;
+            p->rchild=delete(p->rchild, q->data);
+        }
+    }
+}
+
+
 void main()
 {
     struct Node *temp;
     int key=26;
-    Insert(5);
-    Insert(55);
-    Insert(25);
-    Insert(56);
-    Insert(58);
-    Insert(75);
-    Insert(15);
+    root=RInsert(root, 5);
+    RInsert(root, 55);
+    RInsert(root, 25);
+    RInsert(root, 56);
+    RInsert(root, 78);
+    RInsert(root, 75);
+    RInsert(root, 15);
     printf("InOrder: ");
     InOrder(root);
     printf("\nPreOrder: ");
@@ -110,4 +160,8 @@ void main()
         printf("\nElement %d found", key);
     else
         printf("\nElement not found");
+    delete(root, 5);
+    printf("\n");
+    InOrder(root);
+
 }
