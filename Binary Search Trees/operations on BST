@@ -113,8 +113,6 @@ struct Node * delete(struct Node *p, int key) {
     if(p==NULL)
         return NULL;
     if(p->lchild==NULL && p->rchild==NULL) {
-        if(p==root)
-            root=NULL;
         free(p);
         return NULL;
     }
