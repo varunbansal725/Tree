@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *rchild;
+    struct Node *lchild;
+}*root=NULL;
+
+void Insert(int element) {
+    struct Node *newnode, *p;
+    struct Node *t=root;
+    if(t==NULL) {
+        newnode=(struct Node *)malloc(sizeof(struct Node));
+        newnode->data=element;
+        newnode->lchild=newnode->rchild=NULL;
+        root=newnode;
+        return;
+    }
+    while(t!=NULL) {
+        p=t;
+        if(element < p->data)
+            t=p->lchild;
+
+        else
+            t=p->rchild;
+    }
+    newnode=(struct Node *)malloc(sizeof(struct Node));
+    newnode->data=element;
+    newnode->lchild=newnode->rchild=NULL;
+    if(element < p->data)
+        p->lchild=newnode;
+    else
+        p->rchild=newnode;
+}
+
+void InOrder(struct Node *p) {
+    if(p!=NULL) {
+        InOrder(p->lchild);
+        printf("%d ", p->data);
+        InOrder(p->rchild);
+    }
+}
+
+void PreOrder(struct Node *p) {
+    if(p!=NULL) {
+        printf("%d ", p->data);
+        PreOrder(p->lchild);
+        PreOrder(p->rchild);
+    }
+}
+
+void PostOrder(struct Node *p) {
+    if(p!=NULL) {
+        PostOrder(p->lchild);
+        PostOrder(p->rchild);
+        printf("%d ", p->data);
+    }
+
+}
+
+struct Node * search(int key) {
+    struct Node *p=root;
+    while(p) {
+        if(key < p->data)
+            p=p->lchild;
+        else if(key > p->data)
+            p=p->rchild;
+        else
+            return p;
+    }
+    return NULL;
+}
+
+void main()
+{
+    struct Node *temp;
+    int key=26;
+    Insert(5);
+    Insert(55);
+    Insert(25);
+    Insert(56);
+    Insert(58);
+    Insert(75);
+    Insert(15);
+    printf("InOrder: ");
+    InOrder(root);
+    printf("\nPreOrder: ");
+    PreOrder(root);
+    printf("\nPostOrder: ");
+    PostOrder(root);
+    temp=search(key);
+    if(temp)
+        printf("\nElement %d found", key);
+    else
+        printf("\nElement not found");
+}
