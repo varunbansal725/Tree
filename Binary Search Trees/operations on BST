@@ -56,7 +56,23 @@ void PostOrder(struct Node *p) {
         PostOrder(p->rchild);
         printf("%d ", p->data);
     }
+}
 
+
+struct Node * RInsert(struct Node *t, int element) {
+    struct Node *newnode, *p;
+    if(t==NULL) {
+        newnode=(struct Node *)malloc(sizeof(struct Node));
+        newnode->data=element;
+        newnode->lchild=newnode->rchild=NULL;
+        return;
+    }
+
+        if(element < t->data)
+            t->lchild=RInsert(t->lchild, element);
+        else
+            t->rchild=RInsert(t->rchild, element);
+  return t;
 }
 
 struct Node * search(int key) {
