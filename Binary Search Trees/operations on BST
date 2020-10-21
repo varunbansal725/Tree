@@ -47,7 +47,6 @@ struct Node * RInsert(struct Node *t, int element) {
             t->lchild=RInsert(t->lchild, element);
         else
             t->rchild=RInsert(t->rchild, element);
-  return t;
 }
 
 void InOrder(struct Node *p) {
