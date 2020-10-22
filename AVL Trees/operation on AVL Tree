@@ -35,6 +35,77 @@ struct Node * LLRotation(struct Node *p) {
     return pl;
 }
 
+struct Node * RRRotation(struct Node *p) {
+    struct Node *pl, *plr;
+    pl=p->rchild;
+    plr=pl->lchild;
+    pl->lchild=p;
+    p->rchild=plr;
+    p->height=nodeHeight(p);
+    pl->height=nodeHeight(pl);
+    if(root==p)
+        root=pl;
+    return pl;
+}
+
+
+/* RL 
+    right now root==p
+    p->lchild=pl;
+    p->lchild->rchild=plr;
+    the plr is copied to the p and p becomes plr->rchild
+    pl becomes plr->lchild
+    Also the left part of plr gets attached to the rchild of root->lchild & right part gets attached to the lchild of root->rchild
+    and now the plr becomes the new root */
+
+
+struct Node * LRRotation(struct Node *p) {
+    struct Node *pl, *plr;
+    pl=p->lchild;
+    plr=pl->rchild;
+    pl->rchild=plr->lchild;
+    p->lchild=plr->rchild;
+    plr->lchild=pl;
+    plr->rchild=p;
+    p->height=nodeHeight(p);
+    pl->height=nodeHeight(pl);
+    plr->height=nodeHeight(plr);
+    if(root==p)
+        root=plr;
+    return plr;
+}
+
+/* RL 
+    right now root==p
+    p->rchild=pl;
+    p->rchild->lchild=plr;
+    the plr is copied to the p and p becomes plr->lchild
+    pl becomes plr->rchild
+    Also the left part of plr gets attached to the rchild of root->lchild & right part gets attached to the lchild of root->rchild
+    and now the plr becomes the new root */
+
+
+
+struct Node * RLRotation(struct Node *p) {
+    struct Node *pl, *plr;
+    pl=p->rchild;
+    plr=pl->lchild;
+    pl->lchild=plr->rchild;
+    p->rchild=plr->lchild;
+    plr->rchild=pl;
+    plr->lchild=p;
+    p->height=nodeHeight(p);
+    pl->height=nodeHeight(pl);
+    plr->height=nodeHeight(plr);
+    if(root==p)
+        root=plr;
+    return plr;
+}
+
+/* the insert function searches for the position for inserting the node according to the BST properties. it then adjusts the height of the tree.
+after that it adjusts the balanceFactor for the disturbed node (if any) */
+
+ 
 struct Node * insert(struct Node *p, int key) {
     struct Node *newnode;
     if(p==NULL) {
@@ -50,9 +121,86 @@ struct Node * insert(struct Node *p, int key) {
         p->rchild=insert(p->rchild, key);
 
     p->height=nodeHeight(p);
+    
+    /* when left main subtree is heavy along with the subtree beneath the p->lchild heavy too */
     if(balanceFactor(p)==2 && balanceFactor(p->lchild)==1)
         return LLRotation(p);
+        /* when main right subtree is heavy along with the subtree beneath the p->rchild heavy too */
+    else if(balanceFactor(p)==-2 && balanceFactor(p->rchild)==-1)
+        return RRRotation(p);
+        /* when main left subtree is heavy along with the subtree beneath the p->rchild heavy too*/
+    else if(balanceFactor(p)==2 && balanceFactor(p->lchild)==-1)
+        return LRRotation(p);
+        /* when main right subtree is heavy along with the subtree beneath the p->lchild heavy too*/
+    else if(balanceFactor(p)==-2 && balanceFactor(p->rchild)==1)
+        return RLRotation(p);
     return p;
+}
+
+struct Node * InPre(struct Node *p) {
+    while(p && p->rchild!=NULL)
+        p=p->rchild;
+    return p;
+}
+
+struct Node * InSucc(struct Node *p) {
+    while(p && p->lchild!=NULL)
+        p=p->lchild;
+    return p;
+}
+
+
+/* the deleteNode function first searches the node whose value has been passed to be deleted. It then adjusts the height of the ancestor of
+the deleted node. after that it performs rotation and balances the tree. */
+
+struct Node * deleteNode(struct Node *p, int key) {
+    struct Node *q;
+    if(p==NULL)
+        return NULL;
+    if(p->lchild==NULL && p->rchild==NULL) {
+        free(p);
+        return NULL;
+    }
+    if(key < p->data)
+        p->lchild=deleteNode(p->lchild, key);
+    else if(key > p->data)
+        p->rchild=deleteNode(p->rchild, key);
+    else {
+        if(height(p->lchild) > height(p->rchild)) {
+            q=InPre(p->lchild);
+            p->data=q->data;
+            p->lchild=deleteNode(p->lchild, key);
+        }
+        else {
+            q=InSucc(p->rchild);
+            p->data=q->data;
+            p->rchild=deleteNode(p->rchild, q->data);
+        }
+    }
+    
+    p->height=nodeHeight(p);
+    
+    /* when left main subtree is heavy along with the subtree beneath the p->lchild heavy too */
+    if(balanceFactor(p)==2 && balanceFactor(p->lchild)==1)
+        return LLRotation(p);
+        /* when main right subtree is heavy along with the subtree beneath the p->rchild heavy too */
+    else if(balanceFactor(p)==-2 && balanceFactor(p->rchild)==-1)
+        return RRRotation(p);
+        /* when main left subtree is heavy along with the subtree beneath the p->rchild heavy too*/
+    else if(balanceFactor(p)==2 && balanceFactor(p->lchild)==-1)
+        return LRRotation(p);
+        /* when main right subtree is heavy along with the subtree beneath the p->lchild heavy too*/
+    else if(balanceFactor(p)==-2 && balanceFactor(p->rchild)==1)
+        return RLRotation(p);
+        /* when main left subtree is heavy along with the subtree beneath the p->lchild with balanceFactor==0 */
+    else if(balanceFactor(p)==2 && balanceFactor(p->lchild)==0)
+        return LLRotation(p);
+        /* when right main subtree is heavy along with the node beneath the p->rchild with balanceFactor==0 */
+    else if(balanceFactor(p)==-2 && balanceFactor(p->lchild)==0)
+        return RRRotation(p);
+
+    return p;
+
 }
 
 void inorder(struct Node *p) {
@@ -71,11 +219,33 @@ void preorder(struct Node *p) {
     }
 }
 
+/* this function is to find the height of the subtree from the node passed in the function argument */
+
+int height(struct Node *p) {
+    int x,y;
+    if(p==NULL)
+        return 0;
+    x=height(p->lchild);
+    y=height(p->rchild);
+    return x>y?x+1:y+1;
+}
+
+
 void main()
 {
-    root=insert(root, 5);
-    insert(root, 3);
-    insert(root, 2);
+    root=insert(root, 10);
+    insert(root, 20);
+    insert(root, 30);
+    insert(root, 25);
+    insert(root, 28);
+    insert(root, 27);
+    insert(root, 5);
     preorder(root);
-
+    printf("\n");
+    inorder(root);
+    /* by finding the height of the AVL tree we can determine whether the AVL tree is done right or now because AVL tree has the least possible height of any BST */
+    printf("\nHeight of the tree is: %d", height(root));
+    printf("\n");
+    deleteNode(root, 28);
+    inorder(root);
 }
